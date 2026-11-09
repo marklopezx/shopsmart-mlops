@@ -1303,7 +1303,7 @@
         // --- Data Fetching with Frontend Session Aggregation ---
         async function fetchData() {
             try {
-                const response = await fetch("http://127.0.0.1:8000/logs");
+                const response = await fetch("https://shopsmart-ml-api.onrender.com/logs");
                 const data = await response.json();
                 const allLogs = data.logs || [];
 

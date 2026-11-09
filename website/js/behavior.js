@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const payload = buildSessionData(false);
 
       // 3. Use standard fetch with 'keepalive' to bypass the Beacon/CORS block!
-      fetch("http://127.0.0.1:8000/log-session", {
+      fetch("https://shopsmart-ml-api.onrender.com/log-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: payload,
