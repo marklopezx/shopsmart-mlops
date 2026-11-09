@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | ShopSmart</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Global Variables --- */
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --header-bg: #0f172a;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius-md: 8px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: #eff6ff;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+            border-width: 1px;
+            box-shadow: none;
+        }
+
+        /* --- Premium Header --- */
+        header {
+            background-color: var(--header-bg);
+            color: white;
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            color: #cbd5e1;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ffffff;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 5px 14px;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .search-bar:focus-within {
+            border-color: var(--primary-color);
+            background: #0f172a;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            padding: 4px;
+            font-size: 13px;
+            width: 170px;
+            color: #ffffff;
+        }
+
+        .search-bar input::placeholder {
+            color: #64748b;
+        }
+
+        .search-bar button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-link {
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        #auth-link {
+            color: #ffffff !important;
+            background-color: var(--primary-color) !important;
+            border: 1px solid transparent;
+        }
+
+        #auth-link:hover {
+            background-color: var(--primary-hover) !important;
+        }
+
+        /* --- Cart Layout --- */
+        main {
+            flex-grow: 1;
+            padding: 60px 0 100px 0;
+        }
+
+        .page-header {
+            margin-bottom: 45px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-title {
+            font-size: 38px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 1.8fr 1.1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* Left: Cart Items */
+        .cart-items-wrapper {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 25px;
+            padding: 30px 0;
+            border-bottom: 1px solid var(--border-color);
+            align-items: stretch;
+            transition: var(--transition);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .cart-item:first-child {
+            padding-top: 0;
+        }
+
+        /* Premium Circular Checkbox */
+        .item-checkbox-container {
+            display: flex;
+            align-items: center;
+            padding-right: 5px;
+        }
+
+        .custom-checkbox {
+            position: relative;
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            cursor: pointer;
+        }
+
+        .custom-checkbox input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 26px;
+            width: 26px;
+            background-color: #ffffff;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            transition: var(--transition);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .custom-checkbox:hover input~.checkmark {
+            border-color: var(--primary-color);
+        }
+
+        .custom-checkbox input:checked~.checkmark {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 9px;
+            top: 5px;
+            width: 5px;
+            height: 11px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .custom-checkbox input:checked~.checkmark:after {
+            display: block;
+        }
+
+        .item-image {
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            flex-shrink: 0;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+        }
+
+        .item-details {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .item-category {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .item-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 18px;
+            line-height: 1.3;
+            letter-spacing: -0.3px;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+
+        .qty-btn {
+            width: 36px;
+            height: 36px;
+            background: #f8fafc;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .qty-btn:hover {
+            background: #e2e8f0;
+            color: var(--primary-color);
+        }
+
+        .qty-input {
+            width: 44px;
+            height: 36px;
+            border: none;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .item-price-block {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .item-price {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        .btn-remove {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            padding: 6px 0;
+        }
+
+        .btn-remove:hover {
+            color: #b91c1c;
+            text-decoration: underline;
+        }
+
+        .empty-cart-message {
+            text-align: center;
+            padding: 70px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-cart-message svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 25px;
+            color: #cbd5e1;
+        }
+
+        .empty-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        /* Right: Static Cart Selection Summary */
+        .cart-summary {
+            background: #f8fafc;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+        }
+
+        .summary-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 25px;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+        }
+
+        .selected-count {
+            font-size: 15px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .total-val {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        /* ML Demo Box - Refined Tech Aesthetic */
+        .demo-tool-box {
+            margin-top: 40px;
+            padding: 25px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .demo-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .demo-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        #ai-result {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .ai-prob-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .ai-prob-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .ai-prob {
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--header-bg);
+            color: #cbd5e1;
+            padding: 50px 0 30px 0;
+            margin-top: auto;
+            border-top: 1px solid #1e293b;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-grid h3 {
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-grid ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-grid ul li a {
+            color: #94a3b8;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .footer-grid ul li a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        @media (max-width: 900px) {
+            .cart-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-image {
+                width: 100%;
+                height: 200px;
+            }
+
+            .item-actions,
+            .item-price-block {
+                width: 100%;
+                align-items: flex-start;
+            }
+
+            .item-price-block {
+                flex-direction: row;
+                justify-content: space-between;
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container navbar">
+            <a href="index.html" class="logo">Shop<span>Smart</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <form id="search-form" class="search-bar">
+                    <input type="text" id="search-input" placeholder="Search tech...">
+                    <button type="submit" aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg" width="14"
+                            height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg></button>
+                </form>
+                <a href="cart.html" id="cart-link" class="cart-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+                <a href="login.html" id="auth-link" class="btn btn-primary btn-sm">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Shopping Cart</h1>
+                <p class="page-subtitle">Select the items you wish to purchase.</p>
+            </div>
+        </div>
+
+        <div class="cart-layout">
+            <!-- Dynamic Cart Items -->
+            <div class="cart-items-wrapper" id="cart-items-container"></div>
+
+            <!-- Static Cart Selection Summary & ML Tool -->
+            <div class="cart-summary">
+                <h2 class="summary-title">Selected Subtotal</h2>
+
+                <div class="summary-total">
+                    <span class="selected-count" id="selected-count-label">0 items selected</span>
+                    <span class="total-val" id="summary-subtotal">$0.00</span>
+                </div>
+
+                <button class="btn btn-primary" id="checkout-btn"
+                    style="width: 100%; padding: 18px; font-size: 16px; margin-bottom: 12px;"
+                    onclick="proceedToCheckout()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Proceed to Checkout
+                </button>
+                <div style="text-align: center; font-size: 13px; color: var(--text-muted); font-weight: 500;">
+                    Shipping and taxes calculated at checkout.
+                </div>
+
+                <!-- Grading Demo Tool (ML) -->
+                <div class="demo-tool-box">
+                    <div class="demo-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                            </path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                        MLOps Analytics Demo
+                    </div>
+                    <p class="demo-desc">Trigger the FastAPI Random Forest pipeline to calculate the real-time Purchase
+                        Likelihood for this session.</p>
+                    <button id="ai-check-btn" class="btn btn-outline btn-sm" style="width: 100%;">Run AI
+                        Inference</button>
+                    <div id="ai-result">
+                        <div class="ai-prob-row">
+                            <span class="ai-prob-label">Purchase Likelihood:</span>
+                            <span class="ai-prob" id="ai-probability">--</span>
+                        </div>
+                        <p style="font-size: 13px; color: var(--text-muted); font-weight: 500;" id="ai-label">--</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-grid">
+            <div>
+                <a href="index.html" class="logo" style="font-size: 20px;">Shop<span>Smart</span></a>
+                <p style="margin-top: 15px; font-size: 14px; line-height: 1.6; color: #94a3b8; max-width: 250px;">A
+                    university project demonstrating modern e-commerce integration with machine learning.</p>
+            </div>
+            <div>
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="products.html">All Products</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                    <li><a href="cart.html">View Cart</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Account</h3>
+                <ul>
+                    <li><a href="login.html">Sign In</a></li>
+                    <li><a href="register.html">Create Account</a></li>
+                    <li><a href="profile.html">My Profile</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>&copy; 2026 ShopSmart Project. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/behavior.js"></script>
+
+    <script>
+        const productsDB = [
+            { id: 1, title: 'Titan G-15 Laptop', category: 'Laptops', price: '1,499.00', img: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800' },
+            { id: 2, title: '8K Wireless Mouse', category: 'Peripherals', price: '79.00', img: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800' },
+            { id: 3, title: 'MechMaster Pro', category: 'Peripherals', price: '129.00', img: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=800' },
+            { id: 4, title: 'Aura V2 Headphones', category: 'Audio', price: '249.00', img: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=800' },
+            { id: 5, title: 'Quantum 32" Display', category: 'Monitors', price: '399.00', img: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800' },
+            { id: 6, title: 'SonicPro Earbuds', category: 'Audio', price: '149.00', img: 'https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?w=800' },
+            { id: 7, title: 'Nova Smartwatch', category: 'Wearables', price: '199.00', img: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800' },
+            { id: 8, title: 'Stealth Desk Mat', category: 'Peripherals', price: '35.00', img: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800' },
+            { id: 9, title: 'BassCore Speaker', category: 'Audio', price: '89.00', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800' },
+            { id: 10, title: 'StreamPro 4K Cam', category: 'Peripherals', price: '119.00', img: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800' }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('shopsmart_cart')) || [];
+        let selectedIds = []; // Stores IDs of items checked for checkout
+
+        async function syncCartFromSupabase() {
+            if (window.supabaseClient) {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (!session) {
+                    cart = [];
+                    selectedIds = [];
+                    localStorage.removeItem('shopsmart_cart');
+                    updateCartUI();
+                    return;
+                }
+
+                if (selectedIds.length === 0 && cart.length > 0) {
+                    selectedIds = cart.map(i => i.id); // Auto-select all items on initial load
+                }
+                updateCartUI();
+
+                const { data, error } = await window.supabaseClient.from('cart_items').select('product_id, quantity').eq('user_id', session.user.id);
+                if (data && data.length > 0 && !error) {
+                    cart = data.map(dbItem => {
+                        const p = productsDB.find(prod => prod.id === dbItem.product_id);
+                        if (!p) return null;
+                        return { id: dbItem.product_id, title: p.title, category: p.category, price: parseFloat(p.price.replace(',', '')), img: p.img, qty: dbItem.quantity };
+                    }).filter(item => item !== null);
+
+                    // Add new items from DB to selectedIds if they aren't there
+                    cart.forEach(c => { if (!selectedIds.includes(c.id)) selectedIds.push(c.id); });
+                    localStorage.setItem('shopsmart_cart', JSON.stringify(cart));
+                    updateCartUI();
+                } else if (cart.length > 0) {
+                    for (let item of cart) {
+                        await window.supabaseClient.from('cart_items').insert({ user_id: session.user.id, product_id: item.id, quantity: item.qty });
+                    }
+                }
+            }
+        }
+
+        function toggleSelect(id) {
+            if (selectedIds.includes(id)) {
+                selectedIds = selectedIds.filter(i => i !== id);
+            } else {
+                selectedIds.push(id);
+            }
+            updateCartUI();
+        }
+
+        function saveCartLocal() {
+            localStorage.setItem('shopsmart_cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            let selectedTotal = 0;
+            let selectedQtyCount = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                <div class="empty-cart-message">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <h3 class="empty-title">Your cart is empty</h3>
+                    <p style="margin-bottom: 30px; font-size: 15px;">Looks like you haven't added any tech to your cart yet.</p>
+                    <button class="btn btn-primary" onclick="window.location.href='products.html'">Continue Shopping</button>
+                </div>`;
+                document.getElementById('checkout-btn').disabled = true;
+                document.getElementById('checkout-btn').style.opacity = "0.5";
+            } else {
+                document.getElementById('checkout-btn').disabled = false;
+                document.getElementById('checkout-btn').style.opacity = "1";
+
+                container.innerHTML = cart.map(item => {
+                    const itemTotal = item.price * item.qty;
+                    const isChecked = selectedIds.includes(item.id);
+
+                    if (isChecked) {
+                        selectedTotal += itemTotal;
+                        selectedQtyCount += item.qty;
+                    }
+
+                    return `
+                        <div class="cart-item" style="${!isChecked ? 'opacity: 0.45; filter: grayscale(100%);' : ''}">
+                            <div class="item-checkbox-container">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" onchange="toggleSelect(${item.id})" ${isChecked ? 'checked' : ''}>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="item-image"><img src="${item.img}" alt="${item.title}"></div>
+                            <div class="item-details">
+                                <div class="item-category">${item.category}</div>
+                                <div class="item-title">${item.title}</div>
+                                <div class="item-actions">
+                                    <div class="quantity-selector">
+                                        <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                                        <input type="text" class="qty-input" value="${item.qty}" readonly>
+                                        <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item-price-block">
+                                <span class="item-price">$${itemTotal.toFixed(2)}</span>
+                                <button class="btn-remove" onclick="removeItem(${item.id})">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            document.getElementById('summary-subtotal').innerText = `$${selectedTotal.toFixed(2)}`;
+            document.getElementById('selected-count-label').innerText = `${selectedQtyCount} items selected`;
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const cartCountEl = document.getElementById('cart-count');
+            if (cartCountEl) cartCountEl.innerText = totalItems;
+        }
+
+        async function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty < 1) item.qty = 1;
+                if (item.qty > 10) item.qty = 10;
+                saveCartLocal();
+                if (window.supabaseClient) {
+                    const { data: { session } } = await window.supabaseClient.auth.getSession();
+                    if (session) await window.supabaseClient.from('cart_items').update({ quantity: item.qty }).eq('user_id', session.user.id).eq('product_id', id);
+                }
+            }
+        }
+
+        async function removeItem(id) {
+            cart = cart.filter(i => i.id !== id);
+            selectedIds = selectedIds.filter(i => i !== id);
+            saveCartLocal();
+            if (window.supabaseClient) {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (session) await window.supabaseClient.from('cart_items').delete().eq('user_id', session.user.id).eq('product_id', id);
+            }
+        }
+
+        function proceedToCheckout() {
+            if (selectedIds.length === 0) {
+                alert("Please select at least one item to proceed to checkout.");
+                return;
+            }
+            const checkoutItems = cart.filter(item => selectedIds.includes(item.id));
+            localStorage.setItem('shopsmart_checkout_items', JSON.stringify(checkoutItems));
+            window.location.href = 'checkout.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', syncCartFromSupabase);
+
+        // ML Demo Script
+        document.addEventListener('DOMContentLoaded', () => {
+            const aiBtn = document.getElementById('ai-check-btn');
+            const aiResultBox = document.getElementById('ai-result');
+            if (aiBtn) {
+                aiBtn.addEventListener('click', async () => {
+                    aiBtn.textContent = "Analyzing behavior..."; aiBtn.disabled = true;
+                    try {
+                        const payload = { Administrative: 0, Administrative_Duration: 0, Informational: 0, Informational_Duration: 0, ProductRelated: 0, ProductRelated_Duration: 0, BounceRates: 0.02, ExitRates: 0.04, PageValues: 0.0, SpecialDay: 0.0, Month: "Nov", OperatingSystems: 2, Browser: 2, Region: 1, TrafficType: 2, VisitorType: "New_Visitor", Weekend: true, actual_revenue: false };
+                        const response = await fetch("http://127.0.0.1:8000/predict", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+                        if (response.ok) {
+                            const data = await response.json();
+                            aiResultBox.style.display = "block";
+                            document.getElementById('ai-probability').textContent = `${Math.round(data.purchase_probability * 100)}%`;
+                            document.getElementById('ai-label').innerHTML = data.prediction ? "🟢 High Purchase Likelihood" : "🟡 Low Purchase Likelihood";
+                            aiBtn.textContent = "Analysis Complete";
+                        }
+                    } catch (err) { aiBtn.textContent = "API Error"; aiBtn.style.color = "red"; }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

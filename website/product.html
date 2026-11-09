@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details | ShopSmart</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Global Variables --- */
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --header-bg: #0f172a;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-glow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+            border-width: 1px;
+        }
+
+        /* --- Premium Header --- */
+        header {
+            background-color: var(--header-bg);
+            color: white;
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            color: #cbd5e1;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ffffff;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 5px 14px;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .search-bar:focus-within {
+            border-color: var(--primary-color);
+            background: #0f172a;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            padding: 3px;
+            font-size: 13px;
+            width: 170px;
+            color: #ffffff;
+        }
+
+        .search-bar input::placeholder {
+            color: #64748b;
+        }
+
+        .search-bar button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-link {
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .cart-link:hover {
+            color: var(--primary-color);
+        }
+
+        #auth-link {
+            color: #ffffff !important;
+            background-color: var(--primary-color) !important;
+            border: 1px solid transparent;
+        }
+
+        #auth-link:hover {
+            background-color: var(--primary-hover) !important;
+        }
+
+        /* --- Main Product Layout --- */
+        main {
+            flex-grow: 1;
+            padding: 40px 0 80px 0;
+        }
+
+        .product-showcase {
+            display: flex;
+            gap: 50px;
+            margin-bottom: 60px;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Left: Image Gallery */
+        .gallery-container {
+            flex: 1;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .main-image {
+            background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 450px;
+            overflow: hidden;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+            transition: transform 0.5s ease;
+            cursor: crosshair;
+        }
+
+        .main-image:hover img {
+            transform: scale(1.15);
+        }
+
+        .thumbnails {
+            display: flex;
+            gap: 15px;
+        }
+
+        .thumb {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-md);
+            border: 2px solid transparent;
+            background: #f8fafc;
+            padding: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+            opacity: 0.6;
+            transition: var(--transition);
+        }
+
+        .thumb:hover {
+            border-color: #cbd5e1;
+        }
+
+        .thumb:hover img {
+            opacity: 1;
+        }
+
+        .thumb.active {
+            border-color: var(--primary-color);
+            background: #eff6ff;
+        }
+
+        .thumb.active img {
+            opacity: 1;
+        }
+
+        /* Right: Product Info */
+        .product-details {
+            flex: 1.2;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 800;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: fit-content;
+            margin-bottom: 12px;
+        }
+
+        .product-category-label {
+            font-size: 13px;
+            color: var(--primary-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        #dynamic-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+
+        .rating-block {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stars {
+            color: #f59e0b;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .reviews-count {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .reviews-count:hover {
+            text-decoration: underline;
+        }
+
+        .stock-status {
+            color: #10b981;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #dynamic-price {
+            font-size: 38px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .product-description {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Options: Colors & Quantity */
+        .options-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 35px;
+            padding: 25px 0;
+            border-top: 1px dashed var(--border-color);
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .option-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .color-selector {
+            display: flex;
+            gap: 12px;
+        }
+
+        .color-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            transition: var(--transition);
+        }
+
+        .color-dot:hover {
+            transform: scale(1.1);
+        }
+
+        .color-dot.active {
+            outline-color: var(--primary-color);
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            width: fit-content;
+            overflow: hidden;
+        }
+
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+            background: #f8fafc;
+            border: none;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .qty-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .qty-input {
+            width: 50px;
+            height: 40px;
+            border: none;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        /* Actions */
+        .action-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-group .btn {
+            flex: 1;
+        }
+
+        /* --- Details Tabs --- */
+        .tabs-container {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 60px;
+            overflow: hidden;
+        }
+
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            background: #f8fafc;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 18px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+            background: white;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: white;
+        }
+
+        .tab-content {
+            padding: 40px;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Related Products Section --- */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #6366f1);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 5;
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.1);
+            border-color: #bfdbfe;
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+        }
+
+        .product-card .img-container {
+            position: relative;
+            background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+            border-bottom: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+            mix-blend-mode: multiply;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .product-card .info {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            z-index: 2;
+            position: relative;
+        }
+
+        .product-card .cat {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+        }
+
+        .product-card .name {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .product-card .foot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px dashed #e2e8f0;
+            margin-top: auto;
+        }
+
+        .product-card .price {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* --- Premium Custom Modal --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            background: #eff6ff;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+        }
+
+        .modal-content h3 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .modal-content p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        /* --- Custom Toast Notification --- */
+        .toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            color: white;
+            padding: 16px 28px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #334155;
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            bottom: 40px;
+        }
+
+        .toast-icon {
+            background: #10b981;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--header-bg);
+            color: #cbd5e1;
+            padding: 45px 0 20px 0;
+            margin-top: auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-grid h3 {
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .footer-grid ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-grid ul li a {
+            color: #94a3b8;
+            transition: var(--transition);
+            font-size: 13px;
+        }
+
+        .footer-grid ul li a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid #1e293b;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        @media (max-width: 900px) {
+            .product-showcase {
+                flex-direction: column;
+                padding: 25px;
+            }
+
+            .action-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Unified Dark Navigation Bar -->
+    <header>
+        <div class="container navbar">
+            <a href="index.html" class="logo">Shop<span>Smart</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <form id="search-form" class="search-bar">
+                    <input type="text" id="search-input" placeholder="Search tech & gear...">
+                    <button type="submit" aria-label="Search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                </form>
+                <a href="cart.html" id="cart-link" class="cart-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+                <a href="login.html" id="auth-link" class="btn btn-primary btn-sm">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- Premium Product Showcase -->
+        <div class="product-showcase">
+
+            <!-- Left: Image Gallery -->
+            <div class="gallery-container">
+                <div class="main-image">
+                    <img id="dynamic-img" src="" alt="Product Image">
+                </div>
+                <div class="thumbnails">
+                    <div class="thumb active"><img id="thumb-1" src="" alt="Thumb 1"></div>
+                    <div class="thumb"><img id="thumb-2" src="" alt="Thumb 2" style="transform: scale(0.8)"></div>
+                    <div class="thumb"><img id="thumb-3" src="" alt="Thumb 3" style="transform: scale(1.2)"></div>
+                </div>
+            </div>
+
+            <!-- Right: Product Details -->
+            <div class="product-details">
+                <div id="dynamic-badge-container">
+                    <span class="product-badge" id="dynamic-badge">Top Rated</span>
+                </div>
+
+                <div class="product-category-label" id="dynamic-category">Category</div>
+                <h1 id="dynamic-title">Product Name</h1>
+
+                <div class="rating-block">
+                    <div class="stars">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                            fill="currentColor" stroke="currentColor" stroke-width="2">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                            fill="currentColor" stroke="currentColor" stroke-width="2">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                            fill="currentColor" stroke="currentColor" stroke-width="2">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                            fill="currentColor" stroke="currentColor" stroke-width="2">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                            fill="currentColor" stroke="currentColor" stroke-width="2">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                    </div>
+                    <span class="reviews-count">128 Reviews</span>
+                    <span style="color: var(--border-color);">|</span>
+                    <span class="stock-status">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        In Stock
+                    </span>
+                </div>
+
+                <div id="dynamic-price">$0.00</div>
+
+                <p class="product-description" id="dynamic-desc">
+                    Engineered for uncompromising performance and exceptional durability. Upgrading your setup has never
+                    been this seamless.
+                </p>
+
+                <div class="options-section">
+                    <div>
+                        <span class="option-title">Select Color</span>
+                        <div class="color-selector">
+                            <div class="color-dot active" style="background-color: #0f172a;"
+                                onclick="selectColor(this)"></div>
+                            <div class="color-dot" style="background-color: #94a3b8;" onclick="selectColor(this)"></div>
+                            <div class="color-dot" style="background-color: #f1f5f9; border: 1px solid #cbd5e1;"
+                                onclick="selectColor(this)"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="option-title">Quantity</span>
+                        <div class="quantity-selector">
+                            <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                            <input type="text" class="qty-input" id="qty" value="1" readonly>
+                            <button class="qty-btn" onclick="updateQty(1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-group">
+                    <button class="btn btn-outline" onclick="addToCart()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        Add to Cart
+                    </button>
+                    <button class="btn btn-primary" onclick="window.location.href='checkout.html'">
+                        Buy Now
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Tabs -->
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <div class="tab-btn active" onclick="switchTab('overview')">Overview</div>
+                <div class="tab-btn" onclick="switchTab('specs')">Specifications</div>
+                <div class="tab-btn" onclick="switchTab('shipping')">Shipping & Returns</div>
+            </div>
+            <div id="overview" class="tab-content active">
+                <h3 style="font-size: 20px; margin-bottom: 15px;">Product Overview</h3>
+                <p>Experience the next generation of technology with our latest release. Built with premium materials
+                    and designed for ultimate comfort and usability, this product integrates seamlessly into your daily
+                    workflow.</p>
+                <p>Viewing this page automatically sends engagement metrics to your ShopSmart FastAPI Random Forest
+                    model for real-time behavior tracking.</p>
+            </div>
+            <div id="specs" class="tab-content">
+                <h3 style="font-size: 20px; margin-bottom: 15px;">Technical Specifications</h3>
+                <p><strong>Materials:</strong> Aerospace-grade aluminum, premium synthetic polymers.<br>
+                    <strong>Connectivity:</strong> Ultra-low latency wireless technology.<br>
+                    <strong>Compatibility:</strong> Universal support for Windows, macOS, and Linux ecosystems.
+                </p>
+            </div>
+            <div id="shipping" class="tab-content">
+                <h3 style="font-size: 20px; margin-bottom: 15px;">Shipping & Returns</h3>
+                <p>We offer free express shipping on all orders over $50. Standard delivery takes 2-4 business days.</p>
+                <p>Not completely satisfied? Return the product in its original packaging within 30 days for a full,
+                    no-questions-asked refund.</p>
+            </div>
+        </div>
+
+        <!-- Dynamic Related Products -->
+        <div class="section-header">
+            <h2>You May Also Like</h2>
+            <a href="products.html"
+                style="color: var(--primary-color); font-weight: 600; font-size: 14px; transition: var(--transition);">View
+                Collection &rarr;</a>
+        </div>
+
+        <div class="product-grid" id="related-grid">
+            <!-- JavaScript will inject the 9 other products here automatically -->
+        </div>
+    </main>
+
+    <!-- Premium Login Modal -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <h3>Authentication Required</h3>
+            <p>Please log in or create an account to securely add items to your cart and sync your session.</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="window.location.href='login.html'">Sign In</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="toast-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+        Successfully added to your cart!
+    </div>
+
+    <!-- Unified Dark Footer -->
+    <footer>
+        <div class="container footer-grid">
+            <div>
+                <a href="index.html" class="logo" style="font-size: 18px;">Shop<span>Smart</span></a>
+                <p style="margin-top: 12px; font-size: 13px; line-height: 1.5; color: #94a3b8;">
+                    A university project demonstrating modern e-commerce integration with machine learning.
+                </p>
+            </div>
+            <div>
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="products.html">All Products</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                    <li><a href="cart.html">View Cart</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Account</h3>
+                <ul>
+                    <li><a href="login.html">Sign In</a></li>
+                    <li><a href="register.html">Create Account</a></li>
+                    <li><a href="profile.html">My Profile</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>&copy; 2026 ShopSmart Project. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Essential Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/behavior.js"></script>
+
+    <!-- Dynamic Product & Cart Engine -->
+    <script>
+        // --- 1. The ShopSmart 10-Product Database ---
+        const productsDB = [
+            { id: 1, title: 'Titan G-15 Laptop', category: 'Laptops', price: '1,499.00', img: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800' },
+            { id: 2, title: '8K Wireless Mouse', category: 'Peripherals', price: '79.00', img: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800' },
+            { id: 3, title: 'MechMaster Pro', category: 'Peripherals', price: '129.00', img: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=800' },
+            { id: 4, title: 'Aura V2 Headphones', category: 'Audio', price: '249.00', img: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=800' },
+            { id: 5, title: 'Quantum 32" Display', category: 'Monitors', price: '399.00', img: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800' },
+            { id: 6, title: 'SonicPro Earbuds', category: 'Audio', price: '149.00', img: 'https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?w=800' },
+            { id: 7, title: 'Nova Smartwatch', category: 'Wearables', price: '199.00', img: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800' },
+            { id: 8, title: 'Stealth Desk Mat', category: 'Peripherals', price: '35.00', img: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800' },
+            { id: 9, title: 'BassCore Speaker', category: 'Audio', price: '89.00', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800' },
+            { id: 10, title: 'StreamPro 4K Cam', category: 'Peripherals', price: '119.00', img: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800' }
+        ];
+
+        // --- 2. Initialize Page Content ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get the ID from the URL (e.g., product.html?id=3), default to 1 if none found
+            const params = new URLSearchParams(window.location.search);
+            const currentId = parseInt(params.get('id')) || 1;
+
+            // Find the active product
+            const activeProduct = productsDB.find(p => p.id === currentId);
+
+            if (activeProduct) {
+                // Update Main Info
+                document.title = `${activeProduct.title} | ShopSmart`;
+                document.getElementById('dynamic-title').innerText = activeProduct.title;
+                document.getElementById('dynamic-category').innerText = activeProduct.category;
+                document.getElementById('dynamic-price').innerText = `$${activeProduct.price}`;
+
+                // Update Images
+                document.getElementById('dynamic-img').src = activeProduct.img;
+                document.getElementById('thumb-1').src = activeProduct.img;
+                document.getElementById('thumb-2').src = activeProduct.img;
+                document.getElementById('thumb-3').src = activeProduct.img;
+
+                // Hide Bestseller badge if it's not product #1
+                if (currentId !== 1) {
+                    document.getElementById('dynamic-badge-container').style.display = 'none';
+                }
+
+                // Render the other 9 related products
+                const relatedGrid = document.getElementById('related-grid');
+                const relatedProducts = productsDB.filter(p => p.id !== currentId);
+
+                relatedGrid.innerHTML = relatedProducts.map(p => `
+                    <a href="product.html?id=${p.id}" class="product-card">
+                        <div class="img-container"><img src="${p.img}" alt="${p.title}"></div>
+                        <div class="info">
+                            <span class="cat">${p.category}</span>
+                            <h3 class="name">${p.title}</h3>
+                            <div class="foot">
+                                <span class="price">$${p.price}</span>
+                            </div>
+                        </div>
+                    </a>
+                `).join('');
+            }
+        });
+
+        // --- 3. UI Interactions ---
+
+        // Hybrid Add to Cart (Requires Login First)
+        async function addToCart() {
+            // 1. GATEKEEPER: Check if user is logged in before doing anything
+            if (window.supabaseClient) {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+
+                if (!session) {
+                    // Show the beautiful custom modal instead of an ugly alert
+                    document.getElementById('login-modal').classList.add('show');
+                    return;
+                }
+            } else {
+                console.error("Supabase client not loaded.");
+                return;
+            }
+
+            // 2. If logged in, proceed with cart logic
+            let cart = JSON.parse(localStorage.getItem('shopsmart_cart')) || [];
+
+            const qtyToAdd = parseInt(document.getElementById('qty').value) || 1;
+            const params = new URLSearchParams(window.location.search);
+            const currentId = parseInt(params.get('id')) || 1;
+            const activeProduct = productsDB.find(p => p.id === currentId);
+
+            if (activeProduct) {
+                // Save to LocalStorage for instant UI speed
+                const existingItem = cart.find(item => item.id === activeProduct.id);
+                if (existingItem) {
+                    existingItem.qty += qtyToAdd;
+                } else {
+                    cart.push({
+                        id: activeProduct.id,
+                        title: activeProduct.title,
+                        category: activeProduct.category,
+                        price: parseFloat(activeProduct.price.replace(',', '')),
+                        img: activeProduct.img,
+                        qty: qtyToAdd
+                    });
+                }
+                localStorage.setItem('shopsmart_cart', JSON.stringify(cart));
+
+                // Background Sync to Supabase `cart_items` table
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+
+                // Check if item already exists in the database
+                const { data: existingDbItem, error: selectError } = await window.supabaseClient
+                    .from('cart_items')
+                    .select('*')
+                    .eq('user_id', session.user.id)
+                    .eq('product_id', activeProduct.id)
+                    .maybeSingle();
+
+                if (selectError) console.error("Supabase Check Error:", selectError);
+
+                if (existingDbItem) {
+                    // Update existing quantity
+                    const { error: updateError } = await window.supabaseClient
+                        .from('cart_items')
+                        .update({ quantity: existingDbItem.quantity + qtyToAdd })
+                        .eq('id', existingDbItem.id);
+
+                    if (updateError) console.error("Supabase Update Error:", updateError);
+                    else console.log("✅ Successfully updated quantity in Supabase!");
+                } else {
+                    // Insert new cart item
+                    const { error: insertError } = await window.supabaseClient
+                        .from('cart_items')
+                        .insert({
+                            user_id: session.user.id,
+                            product_id: activeProduct.id,
+                            quantity: qtyToAdd
+                        });
+
+                    if (insertError) console.error("Supabase Insert Error:", insertError);
+                    else console.log("✅ Successfully inserted new item into Supabase!");
+                }
+            }
+
+            // Show UI Toast
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+
+            // Update Navbar Cart Count
+            const cartCountEl = document.getElementById('cart-count');
+            if (cartCountEl) {
+                let currentCount = parseInt(cartCountEl.innerText) || 0;
+                cartCountEl.innerText = currentCount + qtyToAdd;
+            }
+        }
+
+        // Closes the custom modal
+        function closeModal() {
+            document.getElementById('login-modal').classList.remove('show');
+        }
+
+        // Quantity Selector
+        function updateQty(change) {
+            const input = document.getElementById('qty');
+            let val = parseInt(input.value) + change;
+            if (val < 1) val = 1;
+            if (val > 10) val = 10;
+            input.value = val;
+        }
+
+        // Color Swatches
+        function selectColor(element) {
+            document.querySelectorAll('.color-dot').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // Tabs Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
+
+    <!-- Cart Navbar Sync Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cart = JSON.parse(localStorage.getItem('shopsmart_cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const cartCountEl = document.getElementById('cart-count');
+            if (cartCountEl) cartCountEl.innerText = totalItems;
+        });
+    </script>
+
+    <!-- Navbar Search Redirect Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchForm = document.getElementById('search-form');
+            const searchInput = document.getElementById('search-input');
+
+            if (searchForm && searchInput) {
+                searchForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        // Redirect user to the catalog page with their search term
+                        window.location.href = 'products.html?search=' + encodeURIComponent(query);
+                    } else {
+                        window.location.href = 'products.html';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
