@@ -9,6 +9,11 @@ from typing import List, Optional
 
 app = FastAPI(title="ShopSmart ML API")
 
+# --- ROOT HEALTH CHECK ROUTE ---
+@app.get("/")
+def health_check():
+    return {"status": "ShopSmart ML API is running!"}
+
 # --- 1. SUPABASE CONNECTION ---
 SUPABASE_URL = "https://nggbvafslqtnuamrkafi.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5nZ2J2YWZzbHF0bnVhbXJrYWZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczODk5NzUsImV4cCI6MjEwMjk2NTk3NX0.OZ6chZPV7ju4u7LPIgGW0yRCTF3T5kShWS61GDlwKAc"
